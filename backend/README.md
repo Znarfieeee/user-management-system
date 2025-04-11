@@ -1,5 +1,6 @@
 # User Management System | Group Project Activity - Full-Stack Application Development
-> To collaboratively build a full-stack application using: **Node.js + MySQL** **Angular 10**
+## Back-end
+> To collaboratively build a full-stack application using: **Node.js + MySQL && Angular 10**
 > Comprehensive README.md documentation for clarity and ease of use.
 > Involvement of testers to ensure the application meets quality standards.
 
