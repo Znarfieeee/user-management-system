@@ -1,28 +1,35 @@
-const config = require('config.json');
-const mysql = require('mysql2/promise');
-const { Sequelize } = require('sequelize');
+const config = require("config.json")
+const mysql = require("mysql2/promise")
+const { Sequelize } = require("sequelize")
 
-module.exports = db = {};
+module.exports = db = {}
 
-initialize();
+initialize()
 
 async function initialize() {
     // Create database if it does not exist
-    const { host, port, user, password , database} = config.database
-    const connection = await mysql.createConnection({host, port, user, password})
-    await connection.query(`CREATE DATABASE IF NOT EXIST \`${database}\`;`);
+    const { host, port, user, password, database } = config.database
+    const connection = await mysql.createConnection({
+        host,
+        port,
+        user,
+        password,
+    })
+    await connection.query(`CREATE DATABASE IF NOT EXISTS \`${database}\`;`)
 
     // connect to db
-    const sequelize = new Sequelize(database, user, password, {dialect: 'mysql' });
+    const sequelize = new Sequelize(database, user, password, {
+        dialect: "mysql",
+    })
 
     // Init models and add them to exported db object
-    db.Account = require('../accounts/account.model')(sequelize);
-    db.RefreshToken = require('../accounts/refresh-token.model')(sequelize);
+    db.Account = require("../accounts/account.model")(sequelize)
+    db.RefreshToken = require("../accounts/refresh-token.model")(sequelize)
 
     // define relationships
-    db.Account.hasMany(db.RefreshToken, {onDelete: 'CASCADE' });
-    db.RefreshToken.belongsTo(db.Account);
+    db.Account.hasMany(db.RefreshToken, { onDelete: "CASCADE" })
+    db.RefreshToken.belongsTo(db.Account)
 
     // sync all models into the database
-    await sequelize.sync({ alter: true });
+    await sequelize.sync({ alter: true })
 }
