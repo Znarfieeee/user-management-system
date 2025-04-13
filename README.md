@@ -1,4 +1,4 @@
-![image](https://github.com/user-attachments/assets/1d509d40-adee-45e9-80c3-aaff1312ca99)# User Management System | Group Project Activity - Full-Stack Application Development
+# User Management System | Group Project Activity - Full-Stack Application Development
 
 ## Project Objectives
 
