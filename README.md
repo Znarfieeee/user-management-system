@@ -143,6 +143,94 @@ The purpose of this project is to develop a full-stack user management system th
           The YAML documentation is used by the swagger.js helper to automatically generate and serve interactive Swagger UI documentation on the /api-docs route of the boilerplate api. To preview the Swagger UI           documentation without running the api simply copy and paste the below YAML into the swagger editor at https://editor.swagger.io/.
           File: swagger.yaml
 
+
+      NEXT: Test the Node.js Boilerplate API
+            To register a new account with the Node.js boilerplate api follow these steps:
+          1.  Open a new request tab by clicking the plus (+) button at the end of the tabs.
+          2. Change the http request method to "POST" with the dropdown selector on the left of the URL input field.
+          3. In the URL field enter the address to the register route of your local API - http://localhost:4000/accounts/register
+          4.Select the "Body" tab below the URL field, change the body type radio button to "raw", and change the format dropdown selector to "JSON".
+          5. Enter a JSON object containing the required user properties in the "Body" textarea, e.g:
+          6. Click the "Send" button, you should receive a "200 OK" response with a "registration successful" message in the response body.
+  ![image](https://github.com/Znarfieeee/user-management-system/blob/a3427de8a60b402852fe0e33dbd9e3e7ad0e58b7/Screenshot%202025-04-13%20201905.png) 
+
+      And this is a screenshot of the verification email received with the token to verify the account:
+  ![image](https://github.com/Znarfieeee/user-management-system/blob/dc68b3223a04f009516cd1760b88882be67952dd/Screenshot%202025-04-13%20220709.png) 
+
+      NEXT: How to verify an account with Postman
+          To verify an account with the Node api follow these steps:
+          1.Open a new request tab by clicking the plus (+) button at the end of the tabs.
+          2.Change the http request method to "POST" with the dropdown selector on the left of the URL input field.
+          3. In the URL field enter the address to the authenticate route of your local API - http://localhost:4000/accounts/verify-email
+          4. Select the "Body" tab below the URL field, change the body type radio button to "raw", and change the format dropdown selector to "JSON".
+          5. Enter a JSON object containing the token received in the verification email (in the previous step) in the "Body" textarea, e.g:
+          6. Click the "Send" button, you should receive a "200 OK" response with a "verification successful" message in the response body.
+   ![image](https://github.com/Znarfieeee/user-management-system/blob/c614fc278174033e7c444d53eec4a639605cf9bd/Screenshot%202025-04-13%20201909.png) 
+     
+       
+       NEXT: How to access an account if you forgot the password
+             To re-enable access to an account with a forgotten password you need to submit the email address of the account to the /account/forgot-password route, the route will then send a token to the email               which will allow you to reset the password of the account in the next step.
+Follow these steps in Postman if you forgot the password for an account:
+  1. Open a new request tab by clicking the plus (+) button at the end of the tabs.
+  2. Change the http request method to "POST" with the dropdown selector on the left of the URL input field.
+  3. In the URL field enter the address to the authenticate route of your local API - http://localhost:4000/accounts/forgot-password
+  4. Select the "Body" tab below the URL field, change the body type radio button to "raw", and change the format dropdown selector to "JSON".
+  5. Enter a JSON object containing the email of the account with the forgotten password in the "Body" textarea, e.g:
+  6. Click the "Send" button, you should receive a "200 OK" response with the message "Please check your email for password reset instructions" in the response body.
+ ![image](https://github.com/Znarfieeee/user-management-system/blob/a3d5299dd11c3e55c0f5dc318a9dfae08b0de2cc/Screenshot%202025-04-13%20202031.png)
+
+     And this is a screenshot of the email received with the token to reset the password of the account:
+![image](https://github.com/Znarfieeee/user-management-system/blob/3d48b9ca46b3e952ce8bde11727fe073a4f8422b/Screenshot%202025-04-13%20221549.png)
+
+
+      NEXT: How to reset the password of an account with Postman
+        To reset the password of an account with the api follow these steps:
+          1.Open a new request tab by clicking the plus (+) button at the end of the tabs.
+          2. Change the http request method to "POST" with the dropdown selector on the left of the URL input field.
+          3. In the URL field enter the address to the authenticate route of your local API - http://localhost:4000/accounts/reset-password
+          4. Select the "Body" tab below the URL field, change the body type radio button to "raw", and change the format dropdown selector to "JSON".
+          5. Enter a JSON object containing the password reset token received in the email from the forgot password step, along with a new password and matching confirmPassword, into the "Body" textarea, e.g:
+          6. Click the "Send" button, you should receive a "200 OK" response with a "password reset successful" message in the response body.
+     ![image](https://github.com/Znarfieeee/user-management-system/blob/b9fe489b374139256bdf026d5ae732a398b26e37/Screenshot%202025-04-13%20205023.png)
+
+
+       NEXT: How to authenticate with Postman
+          To authenticate an account with the api and get a JWT token follow these steps:
+            1. Open a new request tab by clicking the plus (+) button at the end of the tabs.
+            2.Change the http request method to "POST" with the dropdown selector on the left of the URL input field.
+            3.In the URL field enter the address to the authenticate route of your local API - http://localhost:4000/accounts/authenticate
+            4. Select the "Body" tab below the URL field, change the body type radio button to "raw", and change the format dropdown selector to "JSON".
+            5. Enter a JSON object containing the account email and password in the "Body" textarea:
+            6. Click the "Send" button, you should receive a "200 OK" response with the user details including a JWT token in the response body and a refresh token in the response cookies.
+            7. Copy the JWT token value because we'll be using it in the next steps to make authenticated requests.
+      ![image](https://github.com/Znarfieeee/user-management-system/blob/49d949bd9874b60a465dfe2faa85fad1e49efd31/Screenshot%202025-04-13%20202714.png)
+
+         And this is the response cookies tab with the refresh token:
+       ![image](https://github.com/Znarfieeee/user-management-system/blob/1f3a49a0569dd7c7ee491491e6c5973e125d7b0a/Screenshot%202025-04-13%20222542.png)
+       ![image](https://github.com/Znarfieeee/user-management-system/blob/8746f4ec537c5c23632acfa8d3abc30053150d47/Screenshot%202025-04-13%20222803.png)
+   
+
+
+
+
+
+
+
+ 
+
+     
+
+
+
+
+
+ 
+
+      
+
+
+
+
     
 
 
