@@ -16,7 +16,7 @@ import { Role } from '../_models';
 
 // array in local storage for accounts
 const accountsKey = 'angular-10-signup-verification-boilerplate-accounts';
-let accounts = JSON.parse(localStorage.getItem(accountsKey)) || [];
+let accounts: any[] = JSON.parse(localStorage.getItem(accountsKey) || '[]');
 
 @Injectable()
 export class FakeBackendInterceptor implements HttpInterceptor {

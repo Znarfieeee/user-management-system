@@ -1,8 +1,11 @@
-import { AccountService } from '@app/_services';
+import { AccountService } from '../_services';
+
 export function appInitializer(accountService: AccountService) {
-    return () => new Promise((resolve) => {
-        accountService.refreshToken().then(()
-            .subscribe()
-            .add(resolve));
+    return () => new Promise<void>((resolve) => {
+        accountService.refreshToken()
+            .subscribe({
+                next: () => resolve(),
+                error: () => resolve() // Resolve even on error to allow app to continue
+            });
     });
 }

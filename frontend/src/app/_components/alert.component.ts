@@ -2,8 +2,8 @@ import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { Router, NavigationStart } from '@angular/router';
 import { Subscription } from 'rxjs';
 
-import { Alert, AlertType } from '@app/_models';
-import { AlertService } from '@app/_services';
+import { Alert, AlertType } from '../_models';
+import { AlertService } from '../_services';
 
 @Component({ selector: 'alert', templateUrl: 'alert.component.html' })
 export class AlertComponent implements OnInit, OnDestroy {
@@ -23,8 +23,8 @@ export class AlertComponent implements OnInit, OnDestroy {
                     // filter out alerts without 'keepAfterRouteChange' flag
                     this.alerts = this.alerts.filter(x => x.keepAfterRouteChange);
 
-                    //remove 'keepAfterRouteChange' flag on the rest
-                    this.alerts.forEach(x => delete x.keepAfterRouteChange);
+                    // remove 'keepAfterRouteChange' flag on the rest
+                    this.alerts.forEach(x => x.keepAfterRouteChange = false);
                     return;
                 }
 
@@ -68,17 +68,18 @@ export class AlertComponent implements OnInit, OnDestroy {
             this.alerts = this.alerts.filter(x => x !== alert);
         }
     }
+
     cssClass(alert: Alert) {
         if (!alert) return;
 
         const classes = ['alert', 'alert-dismissable'];
 
-        const alertType = {
+        const alertTypeClass = {
             [AlertType.Success]: 'alert alert-success',
             [AlertType.Error]: 'alert alert-danger',
             [AlertType.Info]: 'alert alert-info',
             [AlertType.Warning]: 'alert alert-warning'
-        }
+        };
 
         classes.push(alertTypeClass[alert.type]);
 

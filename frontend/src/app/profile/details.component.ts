@@ -1,11 +1,14 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
-import { AccountService } from '@app/_services';
+import { AccountService } from '../_services';
 
 @Component({ templateUrl: 'details.component.html' })
-export class DetailsComponent {
-    account = this.accountService.accountValue;
+export class DetailsComponent implements OnInit {
+    account: any;
 
     constructor(private accountService: AccountService) { }
 
+    ngOnInit() {
+        this.account = this.accountService.accountValue;
+    }
 }

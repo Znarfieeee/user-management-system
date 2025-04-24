@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
-import { Alert, AlertType } from '@app/_models';
+import { Alert, AlertType } from '../_models';
 
 @Injectable({ providedIn: 'root' })
 export class AlertService {
@@ -39,7 +39,7 @@ export class AlertService {
     }
 
     //clear alerts
-    clear(id = this.defaultID) {
+    clear(id = this.defaultId) {
         this.subject.next(new Alert({ id }));
     }
 }
