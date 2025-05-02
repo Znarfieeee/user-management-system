@@ -9,6 +9,7 @@ import { first } from "rxjs/operators"
 
 import { AccountService, AlertService } from "@app/_services"
 import { MustMatch } from "@app/_helpers"
+import { Role } from "@app/_models"
 
 @Component({ templateUrl: "add-edit.component.html" })
 export class AddEditComponent implements OnInit {
@@ -17,6 +18,7 @@ export class AddEditComponent implements OnInit {
     isAddMode: boolean
     loading = false
     submitted = false
+    roles = Object.keys(Role)
 
     constructor(
         private formBuilder: UntypedFormBuilder,
@@ -32,17 +34,17 @@ export class AddEditComponent implements OnInit {
 
         this.form = this.formBuilder.group(
             {
+                title: ["", Validators.required],
                 firstName: ["", Validators.required],
                 lastName: ["", Validators.required],
                 email: ["", [Validators.required, Validators.email]],
                 role: ["", Validators.required],
+                status: ["Inactive"],
                 password: [
                     "",
                     [
                         Validators.minLength(6),
-                        this.isAddMode
-                            ? Validators.required
-                            : Validators.nullValidator,
+                        ...(!this.isAddMode ? [] : [Validators.required]),
                     ],
                 ],
                 confirmPassword: [""],
@@ -56,7 +58,7 @@ export class AddEditComponent implements OnInit {
             this.accountService
                 .getById(this.id)
                 .pipe(first())
-                .subscribe((x) => this.form.patchValue(x))
+                .subscribe((account) => this.form.patchValue(account))
         }
     }
 
@@ -90,7 +92,7 @@ export class AddEditComponent implements OnInit {
             .pipe(first())
             .subscribe({
                 next: () => {
-                    this.alertService.success("Account created Successfully", {
+                    this.alertService.success("Account created successfully", {
                         keepAfterRouteChange: true,
                     })
                     this.router.navigate(["../"], { relativeTo: this.route })
@@ -111,6 +113,7 @@ export class AddEditComponent implements OnInit {
                     this.alertService.success("Update successful", {
                         keepAfterRouteChange: true,
                     })
+                    this.router.navigate(["../../"], { relativeTo: this.route })
                 },
                 error: (err) => {
                     this.alertService.error(err)
