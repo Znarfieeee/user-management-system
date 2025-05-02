@@ -1,0 +1,1 @@
+{"ast":null,"code":"import { __decorate } from \"tslib\";\nimport { Component } from '@angular/core';\nlet SubNavComponent = class SubNavComponent {};\nSubNavComponent = __decorate([Component({\n  templateUrl: './sub-nav.component.html'\n})], SubNavComponent);\nexport { SubNavComponent };","map":null,"metadata":{},"sourceType":"module","externalDependencies":[]}
