@@ -39,7 +39,7 @@ export class AlertService {
     }
 
     //clear alerts
-    clear(id = this.defaultID) {
+    clear(id = this.defaultId) {
         this.subject.next(new Alert({ id }));
     }
 }
