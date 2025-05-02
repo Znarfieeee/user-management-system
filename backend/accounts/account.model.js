@@ -16,6 +16,7 @@ function model(sequelize) {
         resetToken: { type: DataTypes.STRING },
         resetTokenExpires: { type: DataTypes.DATE },
         passwordReset: { type: DataTypes.DATE },
+        isActive: { type: DataTypes.BOOLEAN, defaultValue: false },
         created: {
             type: DataTypes.DATE,
             allowNull: false,
