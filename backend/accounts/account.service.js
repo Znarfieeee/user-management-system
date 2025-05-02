@@ -29,6 +29,11 @@ async function authenticate({ email, password, ipAddress }) {
     if (!account || !account.isVerified || !(await bcrypt.compare(password, account.passwordHash))) {
         throw 'Email or password is incorrect';
     }
+    
+    // check if account is active
+    if (!account.isActive) {
+        throw 'Account is inactive. Please contact an administrator.';
+    }
 
     // authentication successful so generate jwt and refresh tokens
     const jwtToken = generateJwtToken(account);
@@ -91,6 +96,9 @@ async function register(params, origin) {
     const isFirstAccount = (await db.Account.count()) === 0;
     account.role = isFirstAccount ? Role.Admin : Role.User;
     account.verificationToken = randomTokenString();
+    
+    // set active by default
+    account.isActive = true;
 
     // hash password
     account.passwordHash = await hash(params.password);
@@ -168,6 +176,9 @@ async function create(params) {
 
     const account = new db.Account(params);
     account.verified = Date.now();
+    
+    // set active by default
+    account.isActive = true;
 
     // hash password
     account.passwordHash = await hash(params.password);
@@ -240,8 +251,8 @@ function randomTokenString() {
 }
 
 function basicDetails(account) {
-    const { id, title, firstName, lastName, email, role, created, updated, isVerified } = account;
-    return { id, title, firstName, lastName, email, role, created, updated, isVerified };
+    const { id, title, firstName, lastName, email, role, created, updated, isVerified, isActive } = account;
+    return { id, title, firstName, lastName, email, role, created, updated, isVerified, isActive };
 }
 
 async function sendVerificationEmail(account, origin) {

@@ -19,6 +19,7 @@ router.get('/', authorize(Role.Admin), getAll);
 router.get('/:id', authorize(), getById);
 router.post('/', authorize(Role.Admin), createSchema, create);
 router.put('/:id', authorize(), updateSchema, update);
+router.put('/:id/toggle-status', authorize(Role.Admin), toggleActiveStatus);
 router.delete('/:id', authorize(), _delete);
 
 module.exports = router;
@@ -175,7 +176,8 @@ function createSchema(req, res, next) {
         email: Joi.string().email().required(),
         password: Joi.string().min(6).required(),
         confirmPassword: Joi.string().valid(Joi.ref('password')).required(),
-        role: Joi.string().valid(Role.Admin, Role.User).required()
+        role: Joi.string().valid(Role.Admin, Role.User).required(),
+        isActive: Joi.boolean().default(true)
     });
     validateRequest(req, next, schema);
 }
@@ -193,7 +195,8 @@ function updateSchema(req, res, next) {
         lastName: Joi.string().empty(''),
         email: Joi.string().email().empty(''),
         password: Joi.string().min(6).empty(''),
-        confirmPassword: Joi.string().valid(Joi.ref('password')).empty('')
+        confirmPassword: Joi.string().valid(Joi.ref('password')).empty(''),
+        isActive: Joi.boolean().empty('')
     };
 
     // only admins can update role
@@ -213,6 +216,18 @@ function update(req, res, next) {
 
     accountService.update(req.params.id, req.body)
         .then(account => res.json(account))
+        .catch(next);
+}
+
+function toggleActiveStatus(req, res, next) {
+    accountService.getById(req.params.id)
+        .then(account => {
+            return accountService.update(req.params.id, { isActive: !account.isActive });
+        })
+        .then(account => res.json({ 
+            message: `User ${account.isActive ? 'activated' : 'deactivated'} successfully`,
+            account
+        }))
         .catch(next);
 }
 
