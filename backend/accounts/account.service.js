@@ -26,6 +26,7 @@ module.exports = {
 async function authenticate({ email, password, ipAddress }) {
     const account = await db.Account.scope('withHash').findOne({ where: { email } });
 
+<<<<<<< HEAD
     if (!account || !account.isVerified) {
         throw 'Email or password is incorrect';
     }
@@ -34,6 +35,17 @@ async function authenticate({ email, password, ipAddress }) {
         throw 'Password is incorrect';
     }
     
+=======
+    if (!account) {
+        throw 'Email does not exist';
+    }
+    if (!account.isVerified) {
+        throw { message: 'Account not verified', verificationToken: account.verificationToken };
+    }
+    if (!(await bcrypt.compare(password, account.passwordHash))) {
+        throw 'Password is incorrect';
+    }
+>>>>>>> 2383958f5025b1740e163aac0186b6d95c23015e
     // check if account is active
     if (!account.isActive) {
         throw 'Account is inactive. Please contact an administrator.';
@@ -107,11 +119,25 @@ async function register(params, origin) {
     // hash password
     account.passwordHash = await hash(params.password);
 
+    // If first account, mark as verified and skip email
+    if (isFirstAccount) {
+        account.verified = Date.now();
+        await account.save();
+        return {
+            message: 'Admin registration successful. You can login directly.',
+            isFirstUser: true
+        };
+    }
+
     // save account
     await account.save();
 
     // send email
     await sendVerificationEmail(account, origin);
+    return {
+        message: 'Registration successful, please check your email for verification instructions',
+        isFirstUser: false
+    };
 }
 
 async function verifyEmail({ token }) {
