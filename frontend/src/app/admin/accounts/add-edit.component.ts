@@ -7,9 +7,14 @@ import {
 } from "@angular/forms"
 import { first } from "rxjs/operators"
 
+<<<<<<< HEAD
 import { AccountService, AlertService } from "@app/_services"
 import { MustMatch } from "@app/_helpers"
 import { Role } from "@app/_models"
+=======
+import { AccountService, AlertService } from "../../_services"
+import { MustMatch } from "../../_helpers"
+>>>>>>> 31bbe5627f56b9d236520b9b53530357215ec16e
 
 @Component({ templateUrl: "add-edit.component.html" })
 export class AddEditComponent implements OnInit {

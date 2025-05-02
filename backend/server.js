@@ -10,13 +10,16 @@ app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 app.use(cookieParser())
 
-// Allow cors requests from any origin with credentiials
-app.use(
-    cors({
-        origin: (origin, callback) => callback(null, true),
-        credentials: true,
-    })
-)
+// CORS configuration
+app.use(cors({
+    origin: 'http://localhost:4200', // Angular default port
+    credentials: true
+}))
+
+// Root route
+app.get('/', (req, res) => {
+    res.json({ message: 'Welcome to the User Management System API' });
+});
 
 // api routes
 app.use("/accounts", require("./accounts/accounts.controller"))
