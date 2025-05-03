@@ -76,20 +76,28 @@ export class FakeBackendInterceptor implements HttpInterceptor {
 
         function authenticate() {
             const { email, password } = body;
-            const account = accounts.find(
-                (x) =>
-                    x.email === email && x.password === password && x.isVerified
-            );
+            const account = accounts.find(x => x.email === email);
 
-            if (!account) return error('Email or password is incorrect');
+            if (!account) {
+                return error('Email does not exist');
+            }
 
-            //add refresh token to account
+            if (!account.isVerified) {
+                const verifyUrl = `${location.origin}/account/verify-email?token=${account.verificationToken}`;
+                return error(`Account not verified. Please verify your email: <a href="${verifyUrl}">Click here to verify</a>`);
+            }
+
+            if (account.password !== password) {
+                return error('Password is incorrect');
+            }
+
+            // authentication successful
             account.refreshTokens.push(generateRefreshToken());
             localStorage.setItem(accountsKey, JSON.stringify(accounts));
 
             return ok({
                 ...basicDetails(account),
-                jwtToken: generateJwtToken(account),
+                jwtToken: generateJwtToken(account)
             });
         }
         function refreshToken() {
@@ -155,34 +163,41 @@ export class FakeBackendInterceptor implements HttpInterceptor {
 
             // assign account id and a few other properties then save
             account.id = newAccountId();
-            if (account.id === 1) {
-                // first registered account is an admin
-                account.role = Role.Admin;
-            } else {
-                account.role = Role.User;
-            }
             account.dateCreated = new Date().toISOString();
-            account.verificationToken = new Date().getTime().toString();
-            account.isVerified = false;
             account.refreshTokens = [];
             delete account.confirmPassword;
+
+            if (account.id === 1) {
+                // first registered account is an admin and automatically verified
+                account.role = Role.Admin;
+                account.isVerified = true;
+                account.status = 'Active';
+            } else {
+                account.role = Role.User;
+                account.isVerified = false;
+                account.status = 'Inactive';
+                account.verificationToken = new Date().getTime().toString();
+            }
+
             accounts.push(account);
             localStorage.setItem(accountsKey, JSON.stringify(accounts));
 
-            // display verification email in alert
-            setTimeout(() => {
-                const verifyUrl = `${location.origin}/account/verify-email?token=${account.verificationToken}`;
-                alertService.info(
-                    `
-                    <h4>Verification Email</h4>
-                    <p>Thanks for registering!</p>
-                    <p>Please click the link below to verify your email address:</p>
-                    <p><a href="${verifyUrl}">${verifyUrl}</a></p>
-                    <div><strong>Note:</strong> The fake backend displayed this "email" so you can test without api. A real backend would send a real email.</div>
-                `,
-                    { autoClose: true }
-                );
-            }, 1000);
+            // display verification email in alert only for non-admin users
+            if (account.id !== 1) {
+                setTimeout(() => {
+                    const verifyUrl = `${location.origin}/account/verify-email?token=${account.verificationToken}`;
+                    alertService.info(
+                        `
+                        <h4>Verification Email</h4>
+                        <p>Thanks for registering!</p>
+                        <p>Please click the link below to verify your email address:</p>
+                        <p><a href="${verifyUrl}">${verifyUrl}</a></p>
+                        <div><strong>Note:</strong> The fake backend displayed this "email" so you can test without api. A real backend would send a real email.</div>
+                    `,
+                        { autoClose: false }
+                    );
+                }, 1000);
+            }
 
             return ok();
         }

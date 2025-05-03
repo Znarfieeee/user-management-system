@@ -26,6 +26,16 @@ module.exports = {
 async function authenticate({ email, password, ipAddress }) {
     const account = await db.Account.scope('withHash').findOne({ where: { email } });
 
+<<<<<<< HEAD
+    if (!account || !account.isVerified) {
+        throw 'Email or password is incorrect';
+    }
+    
+    if (!(await bcrypt.compare(password, account.passwordHash))) {
+        throw 'Password is incorrect';
+    }
+    
+=======
     if (!account) {
         throw 'Email does not exist';
     }
@@ -35,6 +45,7 @@ async function authenticate({ email, password, ipAddress }) {
     if (!(await bcrypt.compare(password, account.passwordHash))) {
         throw 'Password is incorrect';
     }
+>>>>>>> 2383958f5025b1740e163aac0186b6d95c23015e
     // check if account is active
     if (!account.isActive) {
         throw 'Account is inactive. Please contact an administrator.';

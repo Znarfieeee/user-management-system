@@ -25,10 +25,15 @@
         "@angular/platform-browser": "^17.3.12",
         "@angular/platform-browser-dynamic": "^17.3.12",
         "@angular/router": "^17.3.12",
+<<<<<<< HEAD
         "bl": "^6.1.0",
         "clone": "^2.1.2",
         "rxjs": "^7.8.2",
         "signal-exit": "^4.1.0",
+=======
+        "bootstrap": "^5.3.5",
+        "rxjs": "^6.5.5",
+>>>>>>> 31bbe5627f56b9d236520b9b53530357215ec16e
         "tslib": "^2.0.0",
         "util-deprecate": "^1.0.2",
         "zone.js": "^0.14.4"

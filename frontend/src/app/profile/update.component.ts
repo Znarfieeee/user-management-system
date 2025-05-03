@@ -82,6 +82,7 @@ export class UpdateComponent implements OnInit {
             })
     }
 <<<<<<< HEAD
+=======
 
     onDelete() {
         if (!this.account) return;
@@ -95,6 +96,5 @@ export class UpdateComponent implements OnInit {
                 })
         }
     }
-=======
->>>>>>> 2383958f5025b1740e163aac0186b6d95c23015e
+>>>>>>> 31bbe5627f56b9d236520b9b53530357215ec16e
 }
