@@ -62,16 +62,30 @@ export class RegisterComponent implements OnInit {
             .register(this.form.value)
             .pipe(first())
             .subscribe({
-                next: () => {
-                    this.alertService.success(
-                        "Registration successful, please check your email for verification instructions",
-                        { keepAfterRouteChange: true }
-                    )
+                next: response => {
+                    console.log("Registration response:", response)
+
+                    // Create a more prominent message
+                    const message = `
+                        <div class="alert alert-success">
+                            <h4>Registration Successful!</h4>
+                            <p>Please check your email for verification instructions.</p>
+                            <p>If you don't see the email, check your spam folder.</p>
+                            <p>Email will be sent to: ${this.form.value.email}</p>
+                        </div>
+                    `
+
+                    this.alertService.success(message, {
+                        keepAfterRouteChange: true,
+                        autoClose: false,
+                    })
+
                     this.router.navigate(["../login"], {
                         relativeTo: this.route,
                     })
                 },
                 error: error => {
+                    console.error("Registration error:", error)
                     this.alertService.error(error)
                     this.loading = false
                 },

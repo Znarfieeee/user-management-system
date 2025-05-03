@@ -1,7 +1,26 @@
 <div class="p-4">
     <div class="container">
-        <h1>Admin</h1>
-        <p>This selection can only be acccessed by administrations.</p>
+        <h1>Admin Dashboard</h1>
+        <p>This section can only be accessed by administrators.</p>
+
+        <div class="row mt-4">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">User Management</h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text">
+                            View, add, edit, and manage user accounts.
+                        </p>
+                        <a routerLink="accounts" class="btn btn-primary"
+                            >Manage User Accounts</a
+                        >
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <router-outlet></router-outlet>
     </div>
 </div>

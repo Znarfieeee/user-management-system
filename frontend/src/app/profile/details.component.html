@@ -4,6 +4,15 @@
     {{ account.lastName }}<br />
     <strong>Email: </strong> {{ account.email }}<br />
     <strong>Role: </strong> {{ account.role }}<br />
-    <strong>Status: </strong> {{ account.status }}
+    <strong>Status: </strong>
+    <span *ngIf="account.isVerified && account.isActive" class="text-success"
+        >Active</span
+    >
+    <span *ngIf="account.isVerified && !account.isActive" class="text-warning"
+        >Inactive</span
+    >
+    <span *ngIf="!account.isVerified" class="text-warning"
+        >Pending Verification</span
+    >
 </p>
 <p><a routerLink="update">Update Profile</a></p>

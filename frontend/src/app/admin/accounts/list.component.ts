@@ -6,7 +6,7 @@ import { Account } from "../../_models"
 
 @Component({ templateUrl: "list.component.html" })
 export class ListComponent implements OnInit {
-    accounts: any[]
+    accounts: Account[] = []
 
     constructor(private accountService: AccountService) {}
 
@@ -14,6 +14,14 @@ export class ListComponent implements OnInit {
         this.accountService
             .getAll()
             .pipe(first())
-            .subscribe((accounts) => (this.accounts = accounts))
+            .subscribe(
+                accounts => {
+                    this.accounts = accounts
+                    console.log("Loaded accounts:", accounts)
+                },
+                error => {
+                    console.error("Error loading accounts:", error)
+                }
+            )
     }
 }

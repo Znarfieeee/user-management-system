@@ -6,7 +6,7 @@ import { LayoutComponent } from "./layout.component"
 import { OverviewComponent } from "./overview.component"
 
 const accountsModule = () =>
-    import("./accounts/accounts.module").then((x) => x.AccountsModule)
+    import("./accounts/accounts.module").then(x => x.AccountsModule)
 
 const routes: Routes = [
     { path: "", component: SubNavComponent, outlet: "subnav" },
