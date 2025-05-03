@@ -16,7 +16,8 @@
         "paths": {
             "@app/*": ["src/app/*"],
             "@environments/*": ["src/environments/*"]
-        }
+        },
+        "skipLibCheck": true
     },
     "exclude": ["test.ts", "**/*.spec.ts"]
 }

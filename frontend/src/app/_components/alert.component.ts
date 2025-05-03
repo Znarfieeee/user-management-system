@@ -68,13 +68,8 @@ export class AlertComponent implements OnInit, OnDestroy {
             this.alerts = this.alerts.filter(x => x !== alert);
         }
     }
-<<<<<<< HEAD
-    
-    cssClasses(alert: Alert) {
-=======
 
     cssClass(alert: Alert) {
->>>>>>> 31bbe5627f56b9d236520b9b53530357215ec16e
         if (!alert) return;
 
         const classes = ['alert', 'alert-dismissable'];

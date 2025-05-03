@@ -1,8 +1,5 @@
 import { Component } from "@angular/core"
 
-<<<<<<< HEAD
-@Component({ templateUrl: './subnav.component.html' })
-=======
 @Component({
     selector: "app-subnav",
     template: `
@@ -24,5 +21,4 @@ import { Component } from "@angular/core"
         </nav>
     `,
 })
->>>>>>> 31bbe5627f56b9d236520b9b53530357215ec16e
 export class SubNavComponent { }
