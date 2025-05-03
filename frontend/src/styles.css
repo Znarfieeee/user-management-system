@@ -1,28 +1,14 @@
-<<<<<<< HEAD
-/* global styles */
-a { cursor: pointer; }
-
-.app-container{
-    min-height: 320px;
-}
-
-.admin-nav{
-    padding-top: 0;
-    padding-bottom: 0;
-    background-color: #e8e9ea;
-    border-bottom: 1px solid #ccc;
-}
-
-.btn-delete-account {
-    width: 40px;
-    text-align: center;
-    box-sizing: content-box;
-=======
 /* You can add global styles to this file, and also import other style files */
-@import '~bootstrap/dist/css/bootstrap.min.css';
+@import "~bootstrap/dist/css/bootstrap.min.css";
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+html,
+body {
+    height: 100%;
+}
+body {
+    margin: 0;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+}
 
 .alert {
     padding: 15px;
@@ -53,5 +39,4 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     color: #8a6d3b;
     background-color: #fcf8e3;
     border-color: #faebcc;
->>>>>>> 31bbe5627f56b9d236520b9b53530357215ec16e
-} 
+}

@@ -1,5 +1,17 @@
-<nav class ="admin-nav navbar navbar-expand navbar-light">
+<nav class="admin-nav navbar navbar-expand navbar-light">
     <div class="navbar-nav">
-        <a routerLink="accounts" routerLinkActive="active" class="nav-item nav-link">Overview</a>
+        <a
+            routerLink=""
+            routerLinkActive="active"
+            [routerLinkActiveOptions]="{ exact: true }"
+            class="nav-item nav-link"
+            >Overview</a
+        >
+        <a
+            routerLink="accounts"
+            routerLinkActive="active"
+            class="nav-item nav-link"
+            >User Accounts</a
+        >
     </div>
 </nav>

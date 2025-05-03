@@ -7,20 +7,15 @@ import {
 } from "@angular/forms"
 import { first } from "rxjs/operators"
 
-<<<<<<< HEAD
-import { AccountService, AlertService } from "@app/_services"
-import { MustMatch } from "@app/_helpers"
-import { Role } from "@app/_models"
-=======
 import { AccountService, AlertService } from "../../_services"
 import { MustMatch } from "../../_helpers"
->>>>>>> 31bbe5627f56b9d236520b9b53530357215ec16e
+import { Role } from "../../_models"
 
 @Component({ templateUrl: "add-edit.component.html" })
 export class AddEditComponent implements OnInit {
-    form: UntypedFormGroup
-    id: string
-    isAddMode: boolean
+    form!: UntypedFormGroup
+    id!: string
+    isAddMode!: boolean
     loading = false
     submitted = false
     roles = Object.keys(Role)
@@ -43,7 +38,7 @@ export class AddEditComponent implements OnInit {
                 firstName: ["", Validators.required],
                 lastName: ["", Validators.required],
                 email: ["", [Validators.required, Validators.email]],
-                role: ["", Validators.required],
+                role: [Role.User, Validators.required],
                 status: ["Inactive"],
                 password: [
                     "",
@@ -63,7 +58,7 @@ export class AddEditComponent implements OnInit {
             this.accountService
                 .getById(this.id)
                 .pipe(first())
-                .subscribe((account) => this.form.patchValue(account))
+                .subscribe(account => this.form.patchValue(account))
         }
     }
 
@@ -102,7 +97,7 @@ export class AddEditComponent implements OnInit {
                     })
                     this.router.navigate(["../"], { relativeTo: this.route })
                 },
-                error: (err) => {
+                error: err => {
                     this.alertService.error(err)
                     this.loading = false
                 },
@@ -120,7 +115,7 @@ export class AddEditComponent implements OnInit {
                     })
                     this.router.navigate(["../../"], { relativeTo: this.route })
                 },
-                error: (err) => {
+                error: err => {
                     this.alertService.error(err)
                     this.loading = false
                 },

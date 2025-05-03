@@ -13,23 +13,32 @@
     </thead>
     <tbody>
         <tr *ngFor="let account of accounts">
-            <td>{{account.title}} {{account.firstName}} {{account.lastName}}</td>
-            <td>{{account.email}}</td>
-            <td>{{account.role}}</td>
             <td>
-                <span [class.badge-success]="account.status === 'Active'"
-                      [class.badge-warning]="account.status === 'Inactive'"
-                      class="badge">
-                    {{account.status}}
+                {{ account.title }} {{ account.firstName }}
+                {{ account.lastName }}
+            </td>
+            <td>{{ account.email }}</td>
+            <td>{{ account.role }}</td>
+            <td>
+                <span
+                    [class.badge-success]="account.status === 'Active'"
+                    [class.badge-warning]="account.status === 'Inactive'"
+                    class="badge">
+                    {{ account.status }}
                 </span>
             </td>
             <td style="white-space: nowrap">
-                <a routerLink="edit/{{account.id}}" class="btn btn-sm btn-primary mr-1">Edit</a>
+                <a
+                    routerLink="edit/{{ account.id }}"
+                    class="btn btn-sm btn-primary mr-1"
+                    >Edit</a
+                >
             </td>
         </tr>
         <tr *ngIf="!accounts">
             <td colspan="5" class="text-center">
-                <span class="spinner-border spinner-border-lg align-center"></span>
+                <span
+                    class="spinner-border spinner-border-lg align-center"></span>
             </td>
         </tr>
     </tbody>

@@ -81,20 +81,4 @@ export class UpdateComponent implements OnInit {
                 }
             })
     }
-<<<<<<< HEAD
-=======
-
-    onDelete() {
-        if (!this.account) return;
-
-        if (confirm('Are you sure?')) {
-            this.deleting = true;
-            this.accountService.delete(this.account.id)
-                .pipe(first())
-                .subscribe(() => {
-                    this.alertService.success("Account deleted successfully", { keepAfterRouteChange: true})
-                })
-        }
-    }
->>>>>>> 31bbe5627f56b9d236520b9b53530357215ec16e
 }
