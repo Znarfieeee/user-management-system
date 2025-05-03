@@ -26,8 +26,18 @@ module.exports = {
 async function authenticate({ email, password, ipAddress }) {
     const account = await db.Account.scope('withHash').findOne({ where: { email } });
 
-    if (!account || !account.isVerified || !(await bcrypt.compare(password, account.passwordHash))) {
-        throw 'Email or password is incorrect';
+    if (!account) {
+        throw 'Email does not exist';
+    }
+    if (!account.isVerified) {
+        throw { message: 'Account not verified', verificationToken: account.verificationToken };
+    }
+    if (!(await bcrypt.compare(password, account.passwordHash))) {
+        throw 'Password is incorrect';
+    }
+    // check if account is active
+    if (!account.isActive) {
+        throw 'Account is inactive. Please contact an administrator.';
     }
 
     // authentication successful so generate jwt and refresh tokens
@@ -91,15 +101,32 @@ async function register(params, origin) {
     const isFirstAccount = (await db.Account.count()) === 0;
     account.role = isFirstAccount ? Role.Admin : Role.User;
     account.verificationToken = randomTokenString();
+    
+    // set active by default
+    account.isActive = true;
 
     // hash password
     account.passwordHash = await hash(params.password);
+
+    // If first account, mark as verified and skip email
+    if (isFirstAccount) {
+        account.verified = Date.now();
+        await account.save();
+        return {
+            message: 'Admin registration successful. You can login directly.',
+            isFirstUser: true
+        };
+    }
 
     // save account
     await account.save();
 
     // send email
     await sendVerificationEmail(account, origin);
+    return {
+        message: 'Registration successful, please check your email for verification instructions',
+        isFirstUser: false
+    };
 }
 
 async function verifyEmail({ token }) {
@@ -168,6 +195,9 @@ async function create(params) {
 
     const account = new db.Account(params);
     account.verified = Date.now();
+    
+    // set active by default
+    account.isActive = true;
 
     // hash password
     account.passwordHash = await hash(params.password);
@@ -240,8 +270,8 @@ function randomTokenString() {
 }
 
 function basicDetails(account) {
-    const { id, title, firstName, lastName, email, role, created, updated, isVerified } = account;
-    return { id, title, firstName, lastName, email, role, created, updated, isVerified };
+    const { id, title, firstName, lastName, email, role, created, updated, isVerified, isActive } = account;
+    return { id, title, firstName, lastName, email, role, created, updated, isVerified, isActive };
 }
 
 async function sendVerificationEmail(account, origin) {

@@ -17,7 +17,6 @@ export class UpdateComponent implements OnInit {
     form!: UntypedFormGroup;
     loading = false;
     submitted = false;
-    deleting = false;
 
     constructor(
         private formBuilder: UntypedFormBuilder,
@@ -82,6 +81,7 @@ export class UpdateComponent implements OnInit {
                 }
             })
     }
+<<<<<<< HEAD
 
     onDelete() {
         if (!this.account) return;
@@ -95,4 +95,6 @@ export class UpdateComponent implements OnInit {
                 })
         }
     }
+=======
+>>>>>>> 2383958f5025b1740e163aac0186b6d95c23015e
 }

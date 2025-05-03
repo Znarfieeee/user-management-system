@@ -1,19 +1,25 @@
-import { Component } from '@angular/core';
+import { Component } from "@angular/core"
 
+@Component({ templateUrl: "./subnav.component.html" })
 @Component({
-    selector: 'app-subnav',
+    selector: "app-subnav",
     template: `
         <nav class="navbar navbar-expand navbar-light bg-light">
             <div class="container-fluid">
                 <div class="collapse navbar-collapse">
                     <ul class="navbar-nav">
                         <li class="nav-item">
-                            <a routerLink="overview" routerLinkActive="active" class="nav-link">Overview</a>
+                            <a
+                                routerLink="overview"
+                                routerLinkActive="active"
+                                class="nav-link"
+                                >Overview</a
+                            >
                         </li>
                     </ul>
                 </div>
             </div>
         </nav>
-    `
+    `,
 })
-export class SubNavComponent { }
+export class SubNavComponent {}

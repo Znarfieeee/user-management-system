@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+<<<<<<< HEAD
 import {
     HttpRequest,
     HttpHandler,
@@ -6,6 +7,9 @@ import {
     HttpInterceptor,
     HTTP_INTERCEPTORS
 } from '@angular/common/http';
+=======
+import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor } from '@angular/common/http';
+>>>>>>> 2383958f5025b1740e163aac0186b6d95c23015e
 import { Observable } from 'rxjs';
 
 import { environment } from '../../environments/environment';
