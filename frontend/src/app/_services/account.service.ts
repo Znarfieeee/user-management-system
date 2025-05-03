@@ -4,30 +4,30 @@ import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import { environment } from '@environments/environment';
-import { Account } from '@app/_models';
+import { environment } from '../environments/environment';
+import { Account } from '../_models';
 
 const baseUrl = `${environment.apiUrl}/accounts`;
 
 @Injectable({ providedIn: 'root' })
 export class AccountService {
-    private accountSubject: BehaviorSubject<Account>;
-    public account: Observable<Account>;
+    private accountSubject: BehaviorSubject<Account | null>;
+    public account: Observable<Account | null>;
 
     constructor(
         private router: Router,
         private http: HttpClient
     ) {
-        this.accountSubject = new BehaviorSubject<Account>(JSON.parse(localStorage.getItem('account') || '{}'));
+        this.accountSubject = new BehaviorSubject<Account | null>(JSON.parse(localStorage.getItem('account') || 'null'));
         this.account = this.accountSubject.asObservable();
     }
 
-    public get accountValue(): Account {
+    public get accountValue(): Account | null {
         return this.accountSubject.value;
     }
 
     login(email: string, password: string) {
-        return this.http.post<any>(`${baseUrl}/authenticate`, { email, password }, { withCredentials: true })
+        return this.http.post<Account>(`${baseUrl}/authenticate`, { email, password }, { withCredentials: true })
             .pipe(map(account => {
                 // store account details and jwt token in local storage to keep account logged in between page refreshes
                 this.accountSubject.next(account);
@@ -44,7 +44,7 @@ export class AccountService {
     }
 
     refreshToken() {
-        return this.http.post<any>(`${baseUrl}/refresh-token`, {}, { withCredentials: true })
+        return this.http.post<Account>(`${baseUrl}/refresh-token`, {}, { withCredentials: true })
             .pipe(map((account) => {
                 this.accountSubject.next(account);
                 this.startRefreshTokenTimer();
@@ -67,6 +67,7 @@ export class AccountService {
     validateResetToken(token: string) {
         return this.http.post(`${baseUrl}/validate-reset-token`, { token });
     }
+
     resetPassword(token: string, password: string, confirmPassword: string) {
         return this.http.post(`${baseUrl}/reset-password`, { token, password, confirmPassword });
     }
@@ -79,45 +80,47 @@ export class AccountService {
         return this.http.get<Account>(`${baseUrl}/${id}`);
     }
 
-    create(params) {
-        return this.http.post(`${baseUrl}`, params);
+    create(params: Partial<Account>) {
+        return this.http.post<Account>(`${baseUrl}`, params);
     }
 
-    update(id, params) {
-        return this.http.put(`${baseUrl}/${id}`, params)
-        .pipe(map((account:any) => {
-            //update the current account if it was updated
-            if (account.id === this.accountValue.id) {
-                //publish updated account to subscribers
-                account = { ...this.accountValue, ...account };
-                this.accountSubject.next(account);
-            }
-            return account;
-        }));
+    update(id: string, params: Partial<Account>) {
+        return this.http.put<Account>(`${baseUrl}/${id}`, params)
+            .pipe(map((account) => {
+                // update the current account if it was updated
+                if (account.id === this.accountValue?.id) {
+                    // publish updated account to subscribers
+                    account = { ...this.accountValue, ...account };
+                    this.accountSubject.next(account);
+                }
+                return account;
+            }));
     }
 
     delete(id: string) {
         return this.http.delete(`${baseUrl}/${id}`)
-        .pipe(map(() => {
-            // auto logout if the logged in account was deleted
-            if (id === this.accountValue.id) {
-                this.logout();
-            }
+            .pipe(map(() => {
+                // auto logout if the logged in account was deleted
+                if (id === this.accountValue?.id) {
+                    this.logout();
+                }
             }));
     }
 
     // helper methods
-    private refreshTokenTimeout;
+    private refreshTokenTimeout: any;
     
     private startRefreshTokenTimer() {
+        const account = this.accountValue;
+        if (!account?.jwtToken) return;
+
         // parse json object from base64 encoded jwt token
-        const jwtToken = JSON.parse(atob(this.accountValue.jwtToken.split('.')[1]));
+        const jwtToken = JSON.parse(atob(account.jwtToken.split('.')[1]));
 
         // set a timeout to refresh the token a minute before it expires
         const expires = new Date(jwtToken.exp * 1000);
         const timeout = expires.getTime() - Date.now() - (60 * 1000);
         this.refreshTokenTimeout = setTimeout(() => this.refreshToken().subscribe(), timeout);
-
     }
 
     private stopRefreshTokenTimer() {

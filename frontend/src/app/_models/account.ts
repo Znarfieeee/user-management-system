@@ -7,5 +7,15 @@ export class Account {
     lastName: string;
     email: string;
     role: Role;
+    status: string;
     jwtToken?: string;
+    refreshTokens?: string[];
+    isVerified: boolean;
+    verificationToken?: string;
+    resetTokens?: string;
+    resetTokenExpires?: string;
+    password?: string;
+    confirmPassword?: string;
+    dateCreated?: string;
+    dateUpdated?: string;
 }

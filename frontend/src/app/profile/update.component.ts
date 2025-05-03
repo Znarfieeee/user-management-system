@@ -6,14 +6,15 @@ import {
     Validators,
 } from "@angular/forms"
 import { first } from "rxjs/operators"
-import { AccountService, AlertService } from "@app/_services"
-import { MustMatch } from "@app/_helpers"
-import { title } from "process"
+import { AccountService, AlertService } from "../_services"
+import { MustMatch } from "../_helpers"
+import { Account } from "../_models"
+
 
 @Component({ templateUrl: 'update.component.html' })
 export class UpdateComponent implements OnInit {
-    account = this.accountService.accountValue;
-    form: UntypedFormGroup;
+    account: Account | null = null;
+    form!: UntypedFormGroup;
     loading = false;
     submitted = false;
 
@@ -26,6 +27,12 @@ export class UpdateComponent implements OnInit {
     ) { }
 
     ngOnInit() {
+        this.account = this.accountService.accountValue;
+        if (!this.account) {
+            this.router.navigate(['/account/login']);
+            return;
+        }
+
         this.form = this.formBuilder.group(
             {
                 title: [this.account.title, Validators.required],
@@ -36,11 +43,12 @@ export class UpdateComponent implements OnInit {
                     [Validators.required, Validators.email],
                 ],
                 password: ["", [Validators.minLength(6)]],
-                confirmPassword: [" "],
+                confirmPassword: [""],
             },
             {
                 validator: MustMatch("password", "confirmPassword"),
-            })
+            }
+        );
     }
 
     // convenience getter for easy access to form fields
@@ -53,7 +61,7 @@ export class UpdateComponent implements OnInit {
         this.alertService.clear();
 
         // stop here if form is invalid
-        if (this.form.invalid) {
+        if (this.form.invalid || !this.account) {
             return;
         }
 
@@ -73,4 +81,20 @@ export class UpdateComponent implements OnInit {
                 }
             })
     }
+<<<<<<< HEAD
+=======
+
+    onDelete() {
+        if (!this.account) return;
+
+        if (confirm('Are you sure?')) {
+            this.deleting = true;
+            this.accountService.delete(this.account.id)
+                .pipe(first())
+                .subscribe(() => {
+                    this.alertService.success("Account deleted successfully", { keepAfterRouteChange: true})
+                })
+        }
+    }
+>>>>>>> 31bbe5627f56b9d236520b9b53530357215ec16e
 }

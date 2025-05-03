@@ -16,17 +16,24 @@
     "dependencies": {
         "@angular-devkit/core": "^19.2.10",
         "@angular/animations": "^17.3.12",
+        "@angular/cdk": "^19.2.11",
         "@angular/common": "^17.3.12",
         "@angular/compiler": "^17.3.12",
         "@angular/core": "^17.3.12",
         "@angular/forms": "^17.3.12",
+        "@angular/material": "^19.2.11",
         "@angular/platform-browser": "^17.3.12",
         "@angular/platform-browser-dynamic": "^17.3.12",
         "@angular/router": "^17.3.12",
+<<<<<<< HEAD
         "bl": "^6.1.0",
         "clone": "^2.1.2",
         "rxjs": "^7.8.2",
         "signal-exit": "^4.1.0",
+=======
+        "bootstrap": "^5.3.5",
+        "rxjs": "^6.5.5",
+>>>>>>> 31bbe5627f56b9d236520b9b53530357215ec16e
         "tslib": "^2.0.0",
         "util-deprecate": "^1.0.2",
         "zone.js": "^0.14.4"
@@ -38,6 +45,8 @@
         "@types/jasmine": "^3.5.0",
         "@types/jasminewd2": "^2.0.3",
         "@types/node": "^12.11.1",
+        "@types/react": "^19.1.2",
+        "@types/ws": "^8.5.10",
         "codelyzer": "^6.0.2",
         "jasmine-core": "^3.5.0",
         "jasmine-spec-reporter": "^5.0.0",
