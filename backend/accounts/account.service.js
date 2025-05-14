@@ -186,8 +186,14 @@ async function resetPassword({ token, password }) {
 }
 
 async function getAll() {
-    const accounts = await db.Account.findAll()
-    return accounts.map(x => basicDetails(x))
+    try {
+        console.log("accountService.getAll called")
+        const accounts = await db.Account.findAll()
+        return accounts.map(x => basicDetails(x))
+    } catch (err) {
+        console.error("Error in accountService.getAll:", err)
+        throw err
+    }
 }
 
 async function getById(id) {
@@ -293,7 +299,6 @@ function basicDetails(account) {
         role,
         created,
         updated,
-        isVerified,
         isActive,
     } = account
     return {
@@ -305,7 +310,7 @@ function basicDetails(account) {
         role,
         created,
         updated,
-        isVerified,
+        isVerified: !!account.verified,
         isActive,
     }
 }
