@@ -4,6 +4,16 @@ const config = require("../config")
 module.exports = sendEmail
 
 async function sendEmail({ to, subject, html, from = config.emailFrom }) {
-    const transporter = nodeMailer.createTransport(config.smtpOptions)
-    await transporter.sendMail({ from, to, subject, html })
+    try {
+        const transporter = nodeMailer.createTransport(config.smtpOptions)
+        const info = await transporter.sendMail({ from, to, subject, html })
+
+        console.log("Email sent successfully!")
+        console.log("Preview URL: %s", nodeMailer.getTestMessageUrl(info))
+
+        return info
+    } catch (error) {
+        console.error("Error sending email:", error)
+        throw error
+    }
 }
