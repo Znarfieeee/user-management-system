@@ -114,7 +114,7 @@ export class FakeBackendInterceptor implements HttpInterceptor {
 
             // replaced old refresh token with a new one and save
             account.refreshTokens = account.refreshTokens.filter(
-                x => x !== refreshToken
+                (x: string) => x !== refreshToken
             )
             account.refreshTokens.push(generateRefreshToken())
             localStorage.setItem(accountsKey, JSON.stringify(accounts))
@@ -135,7 +135,7 @@ export class FakeBackendInterceptor implements HttpInterceptor {
 
             // revoke token and save
             account.refreshTokens = account.refreshTokens.filter(
-                x => x !== refreshToken
+                (x: string) => x !== refreshToken
             )
             localStorage.setItem(accountsKey, JSON.stringify(accounts))
 
@@ -381,11 +381,11 @@ export class FakeBackendInterceptor implements HttpInterceptor {
         }
 
         //helper functions
-        function ok(body?) {
+        function ok(body?: any) {
             return of(new HttpResponse({ status: 200, body })).pipe(delay(500)) // delay observable to simulate server api call
         }
 
-        function error(message) {
+        function error(message: string) {
             return throwError({ error: { message } }).pipe(
                 materialize(),
                 delay(500),
@@ -400,7 +400,7 @@ export class FakeBackendInterceptor implements HttpInterceptor {
                 error: { message: "Unauthorized" },
             }).pipe(materialize(), delay(500), dematerialize())
         }
-        function basicDetails(account) {
+        function basicDetails(account: any) {
             const {
                 id,
                 title,
@@ -429,7 +429,7 @@ export class FakeBackendInterceptor implements HttpInterceptor {
             return !!currentAccount()
         }
 
-        function isAuthorized(role) {
+        function isAuthorized(role: Role) {
             const account = currentAccount()
             if (!account) return false
             return account.role === role // Fixed comparison
@@ -461,7 +461,7 @@ export class FakeBackendInterceptor implements HttpInterceptor {
             return account
         }
 
-        function generateJwtToken(account) {
+        function generateJwtToken(account: any) {
             // create token that expires in 15 minutes
             const tokenPayload = {
                 exp: Math.round(
