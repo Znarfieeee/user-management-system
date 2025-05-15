@@ -93,45 +93,80 @@ async function revokeToken({ token, ipAddress }) {
 }
 
 async function register(params, origin) {
-    // validate
-    if (await db.Account.findOne({ where: { email: params.email } })) {
-        // send already registered error in email to prevent account enumeration
-        return await sendAlreadyRegisteredEmail(params.email, origin)
-    }
-
-    // create account object
-    const account = new db.Account(params)
-
-    // first registered account is an admin
-    const isFirstAccount = (await db.Account.count()) === 0
-    account.role = isFirstAccount ? Role.Admin : Role.User
-    account.verificationToken = randomTokenString()
-
-    // set active by default
-    account.isActive = true
-
-    // hash password
-    account.passwordHash = await hash(params.password)
-
-    // If first account, mark as verified and skip email
-    if (isFirstAccount) {
-        account.verified = Date.now()
-        await account.save()
-        return {
-            message: "Admin registration successful. You can login directly.",
-            isFirstUser: true,
+    try {
+        console.log("Starting account registration process:", params.email);
+        
+        // Validate if email already exists
+        if (await db.Account.findOne({ where: { email: params.email } })) {
+            console.log("Email already registered:", params.email);
+            // Send already registered error in email to prevent account enumeration
+            return await sendAlreadyRegisteredEmail(params.email, origin);
         }
-    }
-
-    // save account
-    await account.save()
-
-    // send email
-    await sendVerificationEmail(account, origin)
-    return {
-        message:
-            "Registration successful, please check your email for verification instructions",
-        isFirstUser: false,
+        
+        // Start a database transaction
+        const transaction = await db.sequelize.transaction();
+        
+        try {
+            console.log("Creating new account for:", params.email);
+            
+            // Create account object
+            const account = new db.Account(params);
+            
+            // First registered account is an admin
+            const accountCount = await db.Account.count();
+            console.log("Current account count:", accountCount);
+            const isFirstAccount = accountCount === 0;
+            account.role = isFirstAccount ? Role.Admin : Role.User;
+            account.verificationToken = randomTokenString();
+            
+            // Set active by default
+            account.isActive = true;
+            
+            // Hash password
+            account.passwordHash = await hash(params.password);
+            
+            console.log("Account object prepared:", {
+                email: account.email,
+                role: account.role,
+                isFirstAccount: isFirstAccount
+            });
+            
+            // If first account, mark as verified and skip email
+            if (isFirstAccount) {
+                account.verified = Date.now();
+                await account.save({ transaction });
+                await transaction.commit();
+                console.log("Admin account created successfully");
+                return {
+                    message: "Admin registration successful. You can login directly.",
+                    isFirstUser: true,
+                };
+            }
+            
+            // Save account within the transaction
+            await account.save({ transaction });
+            
+            // Commit the transaction
+            await transaction.commit();
+            console.log("Account saved successfully:", account.email);
+            
+            // Send verification email
+            await sendVerificationEmail(account, origin);
+            console.log("Verification email sent to:", account.email);
+            
+            return {
+                message: "Registration successful, please check your email for verification instructions",
+                isFirstUser: false,
+            };
+        } catch (error) {
+            // If error occurs, rollback the transaction
+            await transaction.rollback();
+            console.error("Error during account registration:", error);
+            throw error;
+        }
+    } catch (error) {
+        console.error("Account registration failed:", error);
+        throw error;
     }
 }
 
